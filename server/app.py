@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import request, session
+from flask import request, session, jsonify
 from flask_restful import Resource
 
 from config import app, db, api
@@ -28,7 +28,14 @@ class Signup(Resource):
         return user.to_dict(), 201
 
 class CheckSession(Resource):
-    pass
+    def get(self):
+        user_id = session.get('user_id')
+
+        if user_id:
+            user = User.query.get(user_id)
+            return jsonify({'user': user.to_dict()}), 200
+        else:
+            return '', 204
 
 class Login(Resource):
     pass
